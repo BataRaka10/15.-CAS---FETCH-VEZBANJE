@@ -34,6 +34,10 @@
 //  * 
 //  *
 
+let productsHolder = document.getElementById("products")
+
+let searchProduct = document.getElementById("searchProduct")
+
 let response = fetch("https://dummyjson.com/test")
     .then(function(response) {
         if (response.ok) {
@@ -47,8 +51,26 @@ let response = fetch("https://dummyjson.com/test")
     })
 
 
+searchProduct.addEventListener("click", function() {
 
-let response2 = fetch("https://dummyjson.com/products")
+    let searchText = document.getElementById("searchText")
+    // console.log(searchText.value)
+
+    let searchLink = "https://dummyjson.com/products/search?q=" + searchText.value;
+    console.log(searchLink)
+
+    fetch(searchLink).then(response2 => response2.json())
+        .then(function(data2) {
+            console.log(data2)
+            productsHolder.innerHTML = "";
+            for (let product of data2.products) {
+                appendProductToHolder(product)
+            }
+        })
+})
+
+
+let response2 = fetch("https://dummyjson.com/products?limit=20&sortBy=price&order=desc")
     .then(function(response2) {
         console.log("Domaci ok")
 
@@ -56,9 +78,47 @@ let response2 = fetch("https://dummyjson.com/products")
     })
     .then(function(data2) {
         console.log(data2)
+        // console.log(data2.products)
 
-        
+        for (let product of data2.products ) {
+            // console.log(product.title, product.category)
+            appendProductToHolder(product)
+
+            // let singleProduct = document.createElement("div")
+
+            // let productTitle = document.createElement("h2")
+            // productTitle.innerText = product.title
+
+            // let productCategory = document.createElement("p")
+            // productCategory.innerText = product.category
+
+            // let productPrice = document.createElement("p")
+            // productPrice.innerText = product.price
+
+            // singleProduct.append(productTitle, productCategory, productPrice)
+
+            // productsHolder.append(singleProduct)
+        }
     })
+
+
+function appendProductToHolder(product) {
+    
+    let singleProduct = document.createElement("div")
+
+    let productTitle = document.createElement("h2")
+    productTitle.innerText = product.title
+
+    let productCategory = document.createElement("p")
+    productCategory.innerText = product.category
+
+    let productPrice = document.createElement("p")
+    productPrice.innerText = product.price
+
+    singleProduct.append(productTitle, productCategory, productPrice)
+
+    productsHolder.append(singleProduct)
+}
 
 
 
